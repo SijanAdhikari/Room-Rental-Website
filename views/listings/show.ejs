@@ -1,4 +1,18 @@
 <% layout('/layouts/boilerplate') -%>
+<script>
+
+
+</script>
+<style>
+     #map {
+            height: 500px;
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+</style>
 <div class="row mt-3">
     <div class="col  offset-2">
         <div class="card listing-card" style="width: 40rem; ">
@@ -9,7 +23,7 @@
                     <%= listing.description %> <br>
                     &#x20B9; <%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %> <br>
                     <%= listing.country %> <br>
-                    <%= listing.location %> <br>
+                    <%= listing.city %> <br>
                 </p>
                 <div>
                     <a href="/listings/<%=listing._id %>/edit" class="btn btn-dark add-btn">Edit this information</a><br>
@@ -62,40 +76,39 @@
             <% } %>
     </div>
 </div>
-<!-- <h3>Listing Details:</h3>
-<div class="row " >
-    <div col-8>
-        <img src="<%= listing.image.url %>" 
-        class="card-img-top" 
-        alt="Listing_image" 
-        style="height: 18rem;">
-        <div class="card-img-overlay"></div>
-        <div class="card-body">
-            <ul>
-                <li><b><%= listing.title %> </b></li>
-                <li><%= listing.description %></li>
-                <li>&#x20B9; <%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %></li>
-                <li><%= listing.country %></li>
-                <li><%= listing.location %></li>
-            </ul>
-        </div>
-        <a href="/listings/<%=listing._id %>/edit">Edit this information</a>
-    </div>
-  </div> -->
-
-<!-- <body>
-   
-    <ul>
-        <li><%= listing.title %></li>
-        <li><%= listing.description %></li>
-        <li>&#x20B9; <%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %></li>
-        <li><%= listing.location %></li>
-        <li><%= listing.country %></li>
-        <li><%= listing.image %></li>
-    </ul>
-    <a href="/listings/<%=listing._id %>/edit">Edit this information</a>
-    <br>
-    <form action="/listings/<%=listing._id %>?_method=Delete" method="post">
-        <button>Delete this Listings</button>
-    </form>
-</body> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIhlu48Rgp5oPbgPAV6CTslmRu5S1mI6g&libraries=places&callback=initMap"  async defer></script>
+<div style="height: 80vh;">
+    <h2>Location</h2>
+    <div id="map"></div>
+</div>
+    <script>let map;
+        async function initMap() {
+            const coordinates = <%- JSON.stringify(listing.location.coordinates) %>;
+           
+          // Define markers data with positions and titles
+          const markersData = [
+            { position: { lat: coordinates[1], lng:coordinates[0]}, title: "hello" }
+          ];
+          // Request needed libraries.
+          //@ts-ignore
+          const { Map } = await google.maps.importLibrary("maps");
+          const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        
+          // The map, centered at the first marker's position
+          map = new Map(document.getElementById("map"), {
+            zoom: 4,
+            center: markersData[0].position,
+            mapId: "DEMO_MAP_ID",
+          });
+        
+          // Render markers using foreach
+          markersData.forEach(data => {
+            new AdvancedMarkerElement({
+              map: map,
+              position: data.position,
+              title: data.title,
+            });
+          });
+        }
+        
+        initMap();</script>

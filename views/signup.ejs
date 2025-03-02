@@ -1,0 +1,102 @@
+<% layout('/layouts/boilerplate') -%>
+<style>
+    /* body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f1f1f1;
+} */
+form{
+    width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.forms{
+    width: 600px;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 80px;
+    margin-left: 300px;
+    margin-top: 80px;
+}
+h1{
+    text-align: center;
+    margin-bottom: 20px;
+}
+label{
+    display: block;
+    font-weight: 600;
+}
+input{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+input[type="submit"]{
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+input[type="submit"]:hover{
+    background-color: #0056b3;
+}
+a{
+    text-decoration: none;
+    color: #007bff;
+}
+.btn {
+    background-color: #cbe87b;
+    text-decoration-color: aliceblue;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-left: 140px;
+}
+</style>
+    <div  class="forms">
+    <form action="/signup/user" method="post"  >
+        <h1>SignUp</h1>
+        <div >
+        <label for="name">Name :</label>
+        <input type="text" name="User[name]" id="name" required>
+        </div>
+        <div>
+        <label for="email">Email :</label>
+        <input type="email" name="User[email]" id="email" required>
+        </div>
+        <div >
+        <label for="contact">Contact :</label>
+        <input type="number" name="User[contact]" id="contact">
+        </div>
+        <div>
+        <div style="position: relative; display: inline-block;">
+            <label for="password">Password :</label>
+            <input type="password" name="User[password]" id="password" style="padding: 8px;  " required>
+            <button type="button" onclick="togglePassword()" 
+                style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: none; cursor: pointer;">
+                👁️
+            </button>
+        </div>
+        <hr>
+        <input type="submit" value="Submit">
+    </form>
+    <button class="btn"><a href="/">Login</a></button>
+</div>
+
+<script>
+    function togglePassword() {
+        let pass = document.getElementById("password");
+        pass.type = pass.type === "password" ? "text" : "password";
+    }
+</script>

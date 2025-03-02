@@ -1,0 +1,164 @@
+<% layout('/layouts/boilerplate') -%>
+<style>
+    .yel {
+        width: 100px;
+        height: 100px;
+        background-color: yellow;
+        margin: 10px;
+        
+    }
+    /* New footer styles */
+    footer {
+        transition: transform 0.3s ease;
+        transform: translateY(100%);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #333;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+    footer.visible {
+        transform: translateY(0);
+    }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f6fa;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 5px solid #4834d4;
+            padding: 3px;
+        }
+
+        .username {
+            font-size: 2rem;
+            color: #2d3436;
+            margin-bottom: 1rem;
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        .info-card i {
+            color: #4834d4;
+            margin-right: 10px;
+        }
+
+        .user-posts {
+            margin-top: 2rem;
+        }
+
+        .post-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        .post-title {
+            color: #2d3436;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-content {
+            color: #636e72;
+            line-height: 1.6;
+        }
+
+        .post-date {
+            color: #b2bec3;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        img{
+            width: 200px;
+            height: 200px;
+        }
+   
+</style>
+<body>
+    <div class="dashboard-container">
+        <div class="profile-section">
+            <!-- <i src="public\images\usericon.png" style="width: 200px; height: 200px;">user</i> -->
+            <i class="fa-regular fa-user fa-2x"></i>
+            <!-- <img src="public\images\account_circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Profile Picture" class="profile-image"> -->
+            <h1 class="username"><%=user[0].name %></h1>
+            
+            <div class="user-info">
+                <div class="info-card">
+                    <i class="fas fa-phone"></i>
+                    <span><%=user[0].contact %></span>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-envelope"></i>
+                    <span><%=user[0].email %></span>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="user-posts">
+            <h2 style="margin-bottom: 1rem; color: #2d3436;">My Listings</h2>
+            
+            <div class="post-card">
+                <h3 class="post-title">Beautiful Apartment in Downtown</h3>
+                <p class="post-content">Modern 2-bedroom apartment with amazing city views. Fully furnished with high-end amenities.</p>
+                <p class="post-date">Posted on: February 27, 2025</p>
+            </div>
+
+            <div class="post-card">
+                <h3 class="post-title">Cozy Studio for Rent</h3>
+                <p class="post-content">Perfect for students or young professionals. Located near public transportation.</p>
+                <p class="post-date">Posted on: February 25, 2025</p>
+            </div>
+
+            <div class="post-card">
+                <h3 class="post-title">Family Home in Suburbs</h3>
+                <p class="post-content">Spacious 4-bedroom house with a large backyard. Perfect for families.</p>
+                <p class="post-date">Posted on: February 23, 2025</p>
+            </div>
+        </div>
+    </div>
+</body>

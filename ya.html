@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist Toggle</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .heart {
+            font-size: 40px;
+            cursor: pointer;
+            color: grey;
+            transition: color 0.3s;
+        }
+        .heart.active {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <i id="wishlist" class="fas fa-heart heart"></i>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const heartIcon = document.getElementById("wishlist");
+            
+            // Load state from localStorage
+            if (localStorage.getItem("wishlist") === "true") {
+                heartIcon.classList.add("active");
+            }
+            
+            heartIcon.addEventListener("click", function () {
+                heartIcon.classList.toggle("active");
+                localStorage.setItem("wishlist", heartIcon.classList.contains("active"));
+            });
+        });
+    </script>
+</body>
+</html>

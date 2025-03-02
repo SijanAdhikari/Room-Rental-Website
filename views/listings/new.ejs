@@ -1,9 +1,91 @@
 <% layout('/layouts/boilerplate') -%>
+
+<style>
+     #map {
+            height: 500px;
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        #search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+            margin-top: 10px;
+          }
+          
+          .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          
+          .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+          }
+          
+          .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+          }
+          
+          input:checked + .slider {
+            background-color: #2196F3;
+          }
+          
+          input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+          }
+          
+          input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+          }
+          
+          /* Rounded sliders */
+          .slider.round {
+            border-radius: 34px;
+          }
+          
+          .slider.round:before {
+            border-radius: 50%;
+          }
+
+</style>
 <br>
 <div class="row">
     <div class="col-8 offset-2">
     <h3>Create a New Listing</h3> 
-        <form action="/listings" method="post"  novalidate class="needs-validation"  >
+        <form action="/listings" method="post"  enctype="multipart/form-data" novalidate   >
             <div class="mb-3">
                 <label for="title">Title : </label>
                 <input type="text" 
@@ -26,9 +108,9 @@
             </div>
             <div class="mb-3">
                 <label for="image">image url :</label>
-                <input type="text" 
-                name="listing[image][url]" 
-                placeholder="Enter URL"
+                <input 
+                type="file"
+                name="image" 
                 class="form-control" required> 
                 <div class="valid-feedback">image link should be valid!!!</div>
                 <div class="invalid-feedback">please enter a valid image link</div>
@@ -61,16 +143,128 @@
             </div>
         </div>
         <div class="mb-3">
-                <label for="location">Location :</label>
+                <label for="city">City :</label>
                 <input type="text" 
-                name="listing[location]" 
-                placeholder="Enter location"
+                name="listing[city]" 
+                placeholder="Enter a city"
                 class="form-control">
                 <div class="valid-feedback">location should be valid!!!</div>
                 <div class="invalid-feedback">please enter a valid location</div>
+            </div>
+            <div>
+                <input type="hidden" id="location-type" name="listing[location][type]" value="Point">
+                <input type="hidden" id="latitude" name="listing[location][coordinates][1]">
+                <input type="hidden" id="longitude" name="listing[location][coordinates][0]">      
+            </div>
+            <div class="mb-3" style="display: flex;">
+                <h2>Are you at the same location of your house ?</h2>
+                <label class="switch">
+                    <input type="checkbox" id="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                
+            </div>
+            <div class="mb-3" id="locationSection">
+                <h2>Select your Location</h2>
+                <input id="search-box" type="text" placeholder="Search for a location...">
+                <div id="map"></div>
             </div>
             <button class="btn btn-dark add-btn">Add</button>
         </form>
         <br><br>
     </div> 
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIhlu48Rgp5oPbgPAV6CTslmRu5S1mI6g&libraries=places&callback=initMap"  async defer>
+    </script>
+<script>
+    let latitudes, longitudes;
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } 
+    }
+    function showPosition(position) {
+        latitudes = position.coords.latitude;
+        longitudes = position.coords.longitude;
+        document.getElementById('latitude').value = latitudes;
+        document.getElementById('longitude').value = longitudes;
+        console.log("Latitude: " + latitudes + " Longitude: " + longitudes);
+    }
+    document.getElementById("checkbox").addEventListener("click", function() {
+        let locationSection = document.getElementById("locationSection");
+        let searchBox = document.getElementById("search-box");
+        let map = document.getElementById("map");
+        if (this.checked) {
+            getLocation();
+            searchBox.disabled = true;
+            map.style.opacity = "0.5"; // Make the map appear disabled
+            map.style.pointerEvents = "none"; // Prevent interactions
+        } else {
+            searchBox.disabled = false;
+            map.style.opacity = "1";
+            map.style.pointerEvents = "auto";
+        }
+    });
+
+    </script>
+    <script>
+        let map;
+        let userMarker;
+        let infoWindow;
+        let latitude;
+        let longitude;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: { lat: 40.7128, lng: -74.0060 } // Default to New York
+            });
+            infoWindow = new google.maps.InfoWindow();
+
+            const searchBox = new google.maps.places.SearchBox(document.getElementById('search-box'));
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('search-box'));
+
+            map.addListener('click', (e) => {
+                placeMarker(e.latLng);
+            });
+
+            searchBox.addListener('places_changed', () => {
+                const places = searchBox.getPlaces();
+                if (places.length === 0) return;
+
+                const place = places[0];
+                if (!place.geometry) return;
+
+                map.setCenter(place.geometry.location);
+                map.setZoom(12);
+                placeMarker(place.geometry.location);
+            });
+        }
+
+        function placeMarker(location) {
+            if (userMarker) {
+                userMarker.setPosition(location);
+            } else {
+                userMarker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    draggable: true,
+                    title: 'Drag to adjust location'
+                });
+            }
+
+            latitude = location.lat().toFixed(6);
+            longitude = location.lng().toFixed(6);
+            console.log("Latitude: " + latitude + " Longitude: " + longitude);
+
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+
+            infoWindow.setContent(`Lat: ${latitude}, Lng: ${longitude}`);
+            infoWindow.open(map, userMarker);
+        }
+
+
+        
+    </script>
+       

@@ -1,0 +1,131 @@
+<% layout('/layouts/boilerplate') -%>
+<style>
+    #map { height: 500px; width: 100%; }
+    .navbar { margin-bottom: 20px; }
+    .info-window img { width: 100px; height: 100px; border-radius: 8px; }
+</style>
+
+<div class="container" style="height: 100vh;">
+  <h1 class="mb-4">Find Rooms on Map</h1>
+  <div id="map"></div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIhlu48Rgp5oPbgPAV6CTslmRu5S1mI6g&callback=initMap" async defer></script>
+<script>
+  function initMap() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 26.794879, lng: 87.293304 },
+      zoom: 12,
+    });
+
+    const listings = <%- JSON.stringify(allListing) %>;
+   
+
+    listings.forEach(listing => {
+      const marker = new google.maps.Marker({
+        position: { lat: listing.location.coordinates[1], lng: listing.location.coordinates[0] },
+        map: map,
+        title: listing.title
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div class="info-window">
+            <h5>${listing.title}</h5>
+            <img src="${listing.image.url === "" ? "https://via.placeholder.com/100" : listing.image.url}" alt="Room Image">
+            <p>Price: ${listing.price ? listing.price.toLocaleString('en-IN') : 'N/A'}/night</p>
+          </div>
+        `
+      });
+
+      infoWindow.open(map, marker);
+
+      marker.addListener("click", () => {
+        infoWindow.open(map, marker);
+      });
+     
+    });
+  }
+    // map.addListener('zoom_changed', () => {
+      // const zoom = map.getZoom();
+      // if (zoom > 16) {
+        // listings.forEach(listing => {
+        //   const marker = new google.maps.Marker({
+        //     position: { lat: listing.location.coordinates[1], lng: listing.location.coordinates[0] },
+        //     map: map,
+        //     title: listing.title
+        //   });
+
+        //   const infoWindow = new google.maps.InfoWindow({
+        //     content: `
+        //       <div class="info-window">
+        //         <h5>${listing.title}</h5>
+        //         <img src="${listing.image.url === "" ? "https://via.placeholder.com/100" : listing.image.url}" alt="Room Image">
+        //         <p>Price: ${listing.price ? listing.price.toLocaleString('en-IN') : 'N/A'}/night</p>
+        //       </div>
+        //     `
+        //   });
+
+        //   infoWindow.open(map, marker);
+        // });
+      // }
+    // });
+
+
+  //   const rooms = [
+  //     { title: "Cozy Apartment", lat: 26.794879, lng: 87.293304, img: "https://via.placeholder.com/100", price: "$50/night", facilities: "Wi-Fi, Kitchen" },
+  //     { title: "Modern Studio", lat: 26.795, lng: 87.2938, img: "https://via.placeholder.com/100", price: "$75/night", facilities: "Gym, Pool" }
+  //   ];
+
+  //   rooms.forEach(room => {
+  //     const marker = new google.maps.Marker({
+  //       position: { lat: room.lat, lng: room.lng },
+  //       map: map,
+  //       title: room.title
+  //     });
+
+  //     const infoWindow = new google.maps.InfoWindow({
+  //       content: `
+  //         <div class="info-window">
+  //           <h5>${room.title}</h5>
+  //            <img src="${room.img}" alt="Room Image">
+  //           <p>Price: ${room.price}</p>
+  //           <p>Facilities: ${room.facilities}</p>
+  //         </div>
+  //       `
+  //     });
+
+  //     // marker.addListener("click", () => {
+  //     //   infoWindow.open(map, marker);
+  //     // });
+  //   });
+
+  //   map.addListener('zoom_changed', () => {
+  //     const zoom = map.getZoom();
+  //     if (zoom > 16) {
+  //       rooms.forEach(room => {
+  //         const marker = new google.maps.Marker({
+  //           position: { lat: room.lat, lng: room.lng },
+  //           map: map,
+  //           title: room.title
+  //         });
+
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `
+  //             <div class="info-window">
+  //           <h5>${room.title}</h5>
+  //            <img src="${room.img}" alt="Room Image">
+  //           <p>Price: ${room.price}</p>
+  //           <p>Facilities: ${room.facilities}</p>
+  //         </div>
+  //           `
+  //         });
+  //          infoWindow.open(map, marker);
+  //       });
+  //     }
+  //   });
+  // }
+
+</script>
+<script src="maps.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
