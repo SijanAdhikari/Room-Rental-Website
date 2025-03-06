@@ -1,5 +1,4 @@
 <% layout('/layouts/boilerplate') -%>
-    <%= success %>
     <div class="body">
         <h3>All Listings</h3>
     
@@ -17,7 +16,7 @@
             <div class="card-img-overlay"></div>
             <div class="card-body">
               <p class="card-text"> <b><%= listing.title %> </b><br>
-                &#x20B9; <%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %>/night</p>
+                &#x20B9; <%= listing.price ? listing.price.toLocaleString('en-IN') : 'N/A' %>/Month</p>
             </div>
           </div>
         </a>

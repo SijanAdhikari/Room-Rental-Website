@@ -15,17 +15,17 @@ const reviews = require("./routes/review.js");
 const session = require("express-session");
 const User = require("./models/user.js");
 const schema = require("./schema.js");
-const user = require("./routes/users.js");
+const users = require("./routes/users.js");
 const map = require("./routes/map.js");
 var bodyParser = require('body-parser');
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const newuser = require("./models/newuser.js");
-const newusers = require("./routes/newuser.js")
+const {isLoggedIn} = require("./middleware.js");
 
 
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/WanderLust";
+
+const MONGO_URL = "mongodb://127.0.0.1:27017/Rental";
 
 main()
 .then(()=>{ 
@@ -64,32 +64,26 @@ app.use(session(sessonOptions));
 app.use(flash());
 app.use((req, res, next )=>{
     res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    res.locals.user= req.user;
     next();
 })
 
 app.use(passport.initialize());
 app.use(passport.session());  
-passport.use( new LocalStrategy(newuser.authenticate()));
+passport.use( new LocalStrategy(User.authenticate()));
 
-passport.serializeUser(newuser.serializeUser());
-passport.deserializeUser(newuser.deserializeUser());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
 app.use("/map", map)
-app.use("/", user);
-app.use("/new", newusers);
+app.use("/new", users);
 
 
-app.get('/demouser',async(req, res) =>{
-    fakeuser = new newuser ({
-        email:'student@gmail.com',
-        username:"hellostudent",
-    });
-    let registerednewuser = await newuser.register(fakeuser, "HiIamHacker");
-    res.send(registerednewuser);
-})
+
 
 
 

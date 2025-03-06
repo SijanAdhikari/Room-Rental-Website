@@ -17,6 +17,9 @@ const  bodyParser = require('body-parser');
 const {Schema} = mongoose;
 const flash = require("connect-flash");
 const session = require("express-session")
+const User = require("../models/user.js");
+const passport = require("passport");
+const {isLoggedIn} = require("../middleware.js");
 
 
 cloudinary.config({
@@ -50,7 +53,7 @@ router.get('/', wrapAsync(async (req,res) => {
     res.render("listings/index.ejs",{allListing});
 }));
 // new route
-router.get('/new', (req, res) => {
+router.get('/new',isLoggedIn, (req, res) => {
     res.render("listings/new.ejs");
 });
 // show route 

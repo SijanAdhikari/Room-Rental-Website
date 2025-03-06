@@ -1,9 +1,9 @@
 <% if(success && success.length){ %>
-<div class="alert alert-success" role="alert"><%= success %></div>
-<button
-type="button"
-class="btn-close col-3 offset-3"
-data-bs-dismiss="alert"
-arial-label="Close"
-></button>
+<div class="alert alert-success d-flex justify-content-between align-items text-center" role="alert"> <span><%= success %></span> <button
+    type="button"
+    class="btn-close col-3 offset-3"
+    data-bs-dismiss="alert"
+    arial-label="Close"
+    ></button></div>
+
 <% } %>
