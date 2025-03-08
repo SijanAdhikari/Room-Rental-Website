@@ -1,5 +1,5 @@
 const location = "dharan, nepal"; // Replace with user's location
-const apiKey = "AIzaSyCIhlu48Rgp5oPbgPAV6CTslmRu5S1mI6g"; // Replace with your actual API key
+const apiKey = "googleApikey"; // Replace with your actual API key
 const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`;
 
 fetch(geocodeUrl)
